@@ -105,7 +105,7 @@ import { computed } from 'vue';
 
 /* 图标 */
 .confirm-icon {
-  width: 60px; height: 60px; border-radius: 50%;
+  width: 55px; height: 55px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 28px; margin: 0 auto 20px auto;
   background: rgba(255, 255, 255, 0.2);
@@ -114,7 +114,7 @@ import { computed } from 'vue';
 }
 
 .confirm-icon.icon-danger {
-  background: rgba(255, 77, 79, 0.15);
+  background: rgba(255, 77, 79, 0.75);
   border-color: rgba(255, 77, 79, 0.3);
 }
 

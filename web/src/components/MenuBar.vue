@@ -36,13 +36,13 @@
                 'dark-mode-item': isDarkMode 
               }"
               @click="handleClick(menu)"
-              @touchstart="handleTouchStart(menu)"
-              @touchend="handleTouchEnd"
-              @touchcancel="handleTouchEnd"
-              @mousedown="handleMouseDown(menu)"
-              @mouseup="handleMouseUp"
-              @mouseleave="handleMouseUp"
-            >
+  <!-- @touchstart="handleTouchStart(menu)" -->
+  <!-- @touchend="handleTouchEnd" -->
+  <!-- @touchcancel="handleTouchEnd" -->
+  <!-- @mousedown="handleMouseDown(menu)" -->
+  <!-- @mouseup="handleMouseUp" -->
+  <!-- @mouseleave="handleMouseUp" -->
+            
               <button 
                 v-if="isEditMode" 
                 class="menu-edit" 

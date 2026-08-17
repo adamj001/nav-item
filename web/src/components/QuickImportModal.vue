@@ -2,6 +2,7 @@
   <div v-if="visible" class="glass-overlay" @click="close">
     <div class="glass-dialog" @click.stop>
       <h3>⚡ 快速批量导入</h3>
+      <button class="dialog-close-btn" @click="close" :disabled="isImporting">✕</button>
 
       <div class="glass-form-group">
         <label>导入到哪个菜单？</label>
@@ -108,6 +109,43 @@ label {
   font-weight: 700;
   font-size: 14px;
   color: var(--glass-label-color);
+}
+.dialog-close-btn {
+  background: transparent; 
+  border: none; 
+  font-size: 18px; 
+  cursor: pointer;
+  color: var(--glass-label-color); 
+  
+  /* 稍微加大一点宽高，更符合 Windows 现代关闭按钮的比例 */
+  width: 46px; 
+  height: 32px; 
+  
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* 完美的右上角绝对定位 */
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  
+  /* 如果你的弹窗有圆角，按钮右上角也需要圆角，否则悬浮变红时会超出边界 */
+  border-top-right-radius: 12px; /* 这里的数值建议跟 .large-glass-dialog 的圆角大小保持一致 */
+  border-bottom-left-radius: 4px;
+  
+  transition: background-color 0.15s, color 0.15s;
+}
+/* 悬浮状态：Windows 经典的红底白字 */
+.dialog-close-btn:hover { 
+  background-color: #e81123; /* Windows 官方标准的关闭红 */
+  color: #ffffff;            /* 文字或图标变纯白 */
+}
+
+/* 按下状态（可选）：Windows 点击时变深红 */
+.dialog-close-btn:active {
+  background-color: #f1707a;
+  color: #ffffff;
 }
 
 .inline-tip {

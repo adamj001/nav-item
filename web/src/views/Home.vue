@@ -574,7 +574,7 @@ const handleMenuSelect = (menu, parent = null) => {
     activeMenu.value = menu;
     activeSubMenu.value = null;
   }
-  loadCards();
+ // loadCards();
   
   setTimeout(() => {
     const activeMenuItem = document.querySelector('.menu-item.active');
@@ -652,17 +652,20 @@ const showSiteModal = ref(false);
 const isEditingSite = ref(false);
 const currentSiteData = ref(null);
 
+let loadCardsToken = 0;
+
 const loadCards = async () => {
   if (!activeMenu.value) {
     cards.value = [];
     return;
   }
+  const myToken = ++loadCardsToken;
   try {
     const res = await getCards(activeMenu.value.id, activeSubMenu.value?.id);
-    console.log('🔵 加载的卡片数据:', res.data);
+    if (myToken !== loadCardsToken) return; // 已经有更新的请求发出了，这个结果作废
     cards.value = (res.data || []).sort((a, b) => (a.order || 0) - (b.order || 0));
-    console.log('🟢 卡片总数:', cards.value.length);
   } catch (e) {
+    if (myToken !== loadCardsToken) return;
     console.error('加载卡片失败:', e);
     cards.value = [];
   }

@@ -10,7 +10,7 @@
 </span>
   {{ isEdit ? '编辑站点' : '添加新站点' }}
 </h3>
-
+<button class="dialog-close-btn" @click="close">✕</button>
       <div class="form-container">
        <div class="glass-form-group">
   <label>标题 <span class="required">*</span></label>
@@ -200,11 +200,11 @@ h3 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 .icon-edit {
-  background: rgba(99, 102, 241, 0.15);   /* 蓝紫色,编辑语义 */
+  background: rgba(90, 189, 58, 0.15) !important;   /* 蓝紫色,编辑语义 */
   border-color: rgba(99, 102, 241, 0.3);
 }
 .icon-add {
-  background: rgba(34, 197, 94, 0.15);    /* 绿色,新增语义 */
+  background: rgba(62, 4, 220, 0.15) !important;    /* 绿色,新增语义 */
   border-color: rgba(34, 197, 94, 0.3);
 }
 /* label：用全局变量，不硬编码颜色 */
@@ -215,7 +215,43 @@ label {
   font-size: 13px;
   color: var(--glass-label-color);  /* ✅ 跟随主题变量 */
 }
+.dialog-close-btn {
+  background: transparent; 
+  border: none; 
+  font-size: 18px; 
+  cursor: pointer;
+  color: var(--glass-label-color); 
+  
+  /* 稍微加大一点宽高，更符合 Windows 现代关闭按钮的比例 */
+  width: 46px; 
+  height: 32px; 
+  
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* 完美的右上角绝对定位 */
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  
+  /* 如果你的弹窗有圆角，按钮右上角也需要圆角，否则悬浮变红时会超出边界 */
+  border-top-right-radius: 12px; /* 这里的数值建议跟 .large-glass-dialog 的圆角大小保持一致 */
+  border-bottom-left-radius: 4px;
+  
+  transition: background-color 0.15s, color 0.15s;
+}
+/* 悬浮状态：Windows 经典的红底白字 */
+.dialog-close-btn:hover { 
+  background-color: #e81123; /* Windows 官方标准的关闭红 */
+  color: #ffffff;            /* 文字或图标变纯白 */
+}
 
+/* 按下状态（可选）：Windows 点击时变深红 */
+.dialog-close-btn:active {
+  background-color: #f1707a;
+  color: #ffffff;
+}
 .required { color: #ff4d4f; }
 
 .logo-input-wrapper {
