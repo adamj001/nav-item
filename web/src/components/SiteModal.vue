@@ -1,4 +1,5 @@
 <template>
+  
   <div v-if="visible" class="glass-overlay" @click="close">
     <div class="glass-dialog" @click.stop>
       <h3>

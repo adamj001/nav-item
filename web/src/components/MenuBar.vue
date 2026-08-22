@@ -51,24 +51,15 @@
                 type="button"
                 aria-label="编辑菜单"
               >
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                </svg>
+                 <svg viewBox="0 0 24 24" width="16" height="16" fill="#10B981">
+  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+</svg>
               </button>
 
               <span class="menu-name">{{ menu.name }}</span>
               
               <div v-if="isEditMode && pressingId === menu.id" class="press-indicator">
-                <svg class="progress-ring" width="24" height="24">
-                  <circle
-                    class="progress-ring-circle"
-                    stroke="var(--accent-color)"
-                    stroke-width="2"
-                    fill="transparent"
-                    r="10" cx="12" cy="12"
-                    :style="{ strokeDashoffset: progressOffset }"
-                  />
-                </svg>
+                
               </div>
               
               <button 
@@ -78,7 +69,11 @@
                 @touchstart.stop
                 type="button"
                 aria-label="删除菜单"
-              >✕</button>
+              >
+             <svg viewBox="0 0 24 24" width="16" height="16" fill="#DC2626">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </button>
               
             </div>
           </div>
@@ -126,7 +121,7 @@
         </span>
         编辑菜单
       </h3>
-      
+      <button class="dialog-close-btn" @click="closeEditDialog">✕</button>
       <div class="glass-form-group">
         <label>菜单名称</label>
         <input v-model="editForm.name" type="text" class="glass-input" placeholder="请输入菜单名称" />
@@ -500,9 +495,9 @@ async function confirmDeleteSubMenu() {
 
 .menu-del {
   position: absolute; top: -4px; right: -2px;
-  background: #ff4d4f !important; color: white !important;
+ background-color: #FEE2E2; /* 浅红背景 */
   -webkit-text-fill-color: white !important;
-  border: none; border-radius: 50%; width: 20px; height: 20px;
+  border:#FCA5A5; border-radius: 50%; width: 16px; height: 16px;
   font-size: 12px; display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: opacity 0.2s, transform 0.2s;
   box-shadow: 0 2px 8px rgba(255,77,79,0.4); z-index: 10; cursor: pointer; padding: 0;
@@ -510,15 +505,20 @@ async function confirmDeleteSubMenu() {
 
 .menu-edit {
   position: absolute; top: -4px; left: -2px;
-  background: #3b82f6 !important; color: white !important;
+  background-color: #D1FAE5; /* 浅绿背景 */
+  border-color: #A7F3D0;  border-radius: 50%; width: 16px; height: 16px;   /* 淡绿边框（不需要边框可删掉） */
   -webkit-text-fill-color: white !important;
-  border: none; border-radius: 50%; width: 20px; height: 20px;
+ 
   display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: opacity 0.2s, transform 0.2s;
   box-shadow: 0 2px 8px rgba(59,130,246,0.4); z-index: 10; cursor: pointer; padding: 0;
 }
+.menu-edit:hover svg {
+  transform: translateY(-4px) scale(1.4);
+}
 
-.menu-item:hover .menu-del, .menu-item:hover .menu-edit { opacity: 1; transform: scale(1); }
+
+.menu-item:hover .menu-del, .menu-item:hover .menu-edit { opacity: 0.5; transform: scale(1); }
 .menu-del:hover { background: #ff7875 !important; transform: scale(1.15) !important; }
 .menu-del:active { transform: scale(0.95) !important; }
 .menu-edit:hover { background: #2563eb !important; transform: scale(1.15) !important; }
@@ -531,7 +531,37 @@ async function confirmDeleteSubMenu() {
   .menu-item.is-edit-mode .menu-del,
   .menu-item.is-edit-mode .menu-edit { opacity: 1 !important; transform: scale(1) !important; }
 }
-
+.dialog-close-btn {
+  background: transparent; 
+  border: none; 
+  font-size: 18px; 
+  cursor: pointer;
+  color: var(--glass-label-color); 
+  
+  /* 稍微加大一点宽高，更符合 Windows 现代关闭按钮的比例 */
+  width: 46px; 
+  height: 32px; 
+  
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* 完美的右上角绝对定位 */
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  
+  /* 如果你的弹窗有圆角，按钮右上角也需要圆角，否则悬浮变红时会超出边界 */
+  border-top-right-radius: 12px; /* 这里的数值建议跟 .large-glass-dialog 的圆角大小保持一致 */
+  border-bottom-left-radius: 4px;
+  
+  transition: background-color 0.15s, color 0.15s;
+}
+/* 悬浮状态：Windows 经典的红底白字 */
+.dialog-close-btn:hover { 
+  background-color: #e81123; /* Windows 官方标准的关闭红 */
+  color: #ffffff;            /* 文字或图标变纯白 */
+}
 .add-menu-btn {
   display: flex; align-items: center; justify-content: center;
   min-width: 44px; width: 44px; height: 44px;

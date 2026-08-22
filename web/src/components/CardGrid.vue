@@ -39,9 +39,11 @@
                 @click.stop="handleEdit(element)" 
                 title="编辑"
               >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                </svg>
+             
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#10B981">
+  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+</svg>
+
               </button>
               <button 
                 class="icon-btn del-btn" 
@@ -49,7 +51,7 @@
                 @click.stop="handleDelete(element.id)" 
                 title="删除"
               >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#DC2626">
                   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
                 </svg>
               </button>
@@ -386,6 +388,39 @@ function handleClick(e) { if (props.isEditMode) e.preventDefault(); }
   
   .edit-btn:active { color: #2196F3; }
   .del-btn:active { color: #F44336; }
+}
+/* 按钮容器基础设置 */
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  /* 确保图标超出按钮范围时不会被裁剪 */
+  overflow: visible;
+  /* 垂直居中对齐 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 图标基础样式与动画过渡 */
+.icon-btn svg {
+  display: inline-block;
+  /* 平滑过渡动画，加入微弹效果 */
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 设置变换原点为中心 */
+  transform-origin: center;
+}
+
+/* 悬浮时的抬高与放大 */
+.icon-btn:hover svg {
+  /* 向上抬高 6px，同时放大 1.6 倍 */
+  transform: translateY(-6px) scale(1.6);
+}
+
+/* 按下/点击时的反馈（可选，提供更好的点击手感） */
+.icon-btn:active svg {
+  transform: translateY(-2px) scale(1.3);
 }
 
 /* =========================================

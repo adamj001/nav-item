@@ -31,15 +31,17 @@
                  
           <div class="user-menu-container">
            <button 
-  class="icon-btn admin-btn" 
-  :class="{ 
-    'is-admin': isAdmin, 
-    'is-user': isLoggedIn && !isAdmin, 
-    'is-logged-out': !isLoggedIn 
-  }"
-  @click.stop="handleUserIconClick"
->
-  <Icon name="user-cog" style="font-size: 20px;" />
+              class="icon-btn admin-btn" 
+              :class="{ 
+                'is-admin': isAdmin, 
+                'is-user': isLoggedIn && !isAdmin,                    
+                'is-logged-out': !isLoggedIn 
+              }"
+            :aria-label="isLoggedIn ? '打开用户菜单' : '登录'"
+              :aria-expanded="isLoggedIn ? showUserMenu : undefined"
+              @click.stop="handleUserIconClick"
+            >
+              <Icon name="user-cog" style="font-size: 20px;" />
 </button>
 
           
@@ -83,7 +85,12 @@
   </div>  <!-- ← dropdown-menu 在这里闭合 -->
 </Transition>
 </div>
- <button class="icon-btn" @click="toggleTheme" title="切换主题">
+ <button class="icon-btn"
+ type="button"
+  @click="toggleTheme"
+  :aria-label="isDarkMode ? '切换到浅色模式' : '切换到深色模式'"
+  :title="isDarkMode ? '切换到浅色模式' : '切换到深色模式'"
+ >
             <Icon :name="isDarkMode ? 'sun' : 'moon'" style="font-size: 26px;" />
           </button>
         </div>
@@ -103,9 +110,9 @@
         @delete="confirmDeleteMenu"
         @refresh="reloadMenus"
       />
-    </div>
+    
     <div class="menu-divider"></div>
-   
+   </div>
  </header>
 
     <div class="search-section">
@@ -113,27 +120,68 @@
         <div class="search-container" v-click-outside="() => showEngineMenu = false">
 
          <div class="engine-selector">
-  <div class="engine-current" @click="showEngineMenu = !showEngineMenu">
-    <img v-if="selectedEngine.icon.startsWith('http')" :src="selectedEngine.icon" class="engine-icon" />
-   <span v-else class="engine-emoji">🏠</span>
-    <span class="engine-arrow">▾</span>
-  </div>
-  
-<div v-if="showEngineMenu" class="engine-dropdown">
-
-    <div 
-      v-for="engine in searchEngines" 
+  <!-- 当前搜索引擎按钮 -->
+  <button
+    type="button"
+    class="engine-current"
+    :aria-expanded="showEngineMenu"
+    aria-haspopup="listbox"
+    aria-label="选择搜索引擎"
+    :title="`当前搜索引擎：${selectedEngine.label}`"
+    @click.stop="showEngineMenu = !showEngineMenu"
+  >
+    <img
+      v-if="selectedEngine.icon?.startsWith('http')"
+      :src="selectedEngine.icon"
+      :alt="selectedEngine.label"
+      class="engine-icon"
+    />
+    <span
+      v-else
+      class="engine-emoji"
+      aria-hidden="true"
+    >
+      🏠
+    </span>
+    <span class="engine-arrow" aria-hidden="true">▾</span>
+  </button>
+  <!-- 搜索引擎下拉菜单 -->
+  <div
+    v-if="showEngineMenu"
+    class="engine-dropdown"
+    role="listbox"
+    :aria-label="'搜索引擎列表'"
+  >
+    <button
+      v-for="engine in searchEngines"
       :key="engine.name"
+      type="button"
       class="engine-option"
       :class="{ active: selectedEngine.name === engine.name }"
-      @click="selectedEngine = engine; showEngineMenu = false"
+      :aria-selected="selectedEngine.name === engine.name"
+      role="option"
+      @click.stop="
+        selectedEngine = engine;
+        showEngineMenu = false
+      "
     >
-      <img v-if="engine.icon.startsWith('http')" :src="engine.icon" class="engine-icon" />
-     <span v-else class="engine-emoji">🏠</span>
-
-
-      <span class="engine-label">{{ engine.label }}</span>
-    </div>
+      <img
+        v-if="engine.icon?.startsWith('http')"
+        :src="engine.icon"
+        :alt="engine.label"
+        class="engine-icon"
+      />
+      <span
+        v-else
+        class="engine-emoji"
+        aria-hidden="true"
+      >
+        🏠
+      </span>
+      <span class="engine-label">
+        {{ engine.label }}
+      </span>
+    </button>
   </div>
 </div>
 
@@ -157,6 +205,7 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
+      @touchcancel="handleTouchEnd"
     >
      <CardGrid 
   :cards="filteredCards" 
@@ -186,7 +235,6 @@
       :current-menu-id="activeMenu?.id"
       @import="handleBatchImport"
     />
-
     <div v-if="showUserManageModal" class="glass-overlay" @click.self="showUserManageModal = false">
   <div class="glass-dialog large-glass-dialog">
       <div class="dialog-header">
@@ -196,7 +244,6 @@
     <UserManage />
   </div>
 </div>
-
      <Teleport to="body">
   <div v-if="showLoginModal" 
        class="glass-overlay" 
@@ -230,6 +277,7 @@
     </div>
   </div>
 </Teleport>
+<Teleport to="body">
  <div v-if="showLogoutConfirm" class="glass-overlay" 
      :class="{ 'dark-mode': isDarkMode }"
      @click.self="showLogoutConfirm = false">
@@ -247,6 +295,7 @@
     </div>
   </div>
 </div>
+</Teleport>
 <ConfirmDialog
   v-model:visible="showDeleteMenuConfirm"
   :is-dark-mode="isDarkMode"
@@ -291,7 +340,7 @@
   :is-dark-mode="isDarkMode"
   @saved="handleSettingsSaved"
 />
-
+<Teleport to="body">
    <div v-if="showImportConfirm" class="glass-overlay" 
      :class="{ 'dark-mode': isDarkMode }"
      @click.self="showImportConfirm = false">
@@ -322,7 +371,7 @@
     </div>
   </div>
 </div>
-
+</Teleport>
 
 <!-- ============================================================
   【2】恢复进度弹窗 - 保持原有的进度条样式
@@ -341,6 +390,7 @@
     </div>
   </div>
 </div>
+<Teleport to="body">
 <div v-if="showImportResult" class="glass-overlay" 
      :class="{ 'dark-mode': isDarkMode }"
      @click.self="finishImport">
@@ -368,6 +418,8 @@
     <button class="glass-btn-primary result-confirm-btn" @click="finishImport">完成</button>
   </div>
 </div>
+</Teleport>
+
   <div v-if="showAddMenuDialog" class="glass-overlay" @click.self="showAddMenuDialog = false">
   <div class="glass-dialog glass-dialog-sm" @click.stop>
     <h3>
@@ -379,7 +431,7 @@
   </span>
   添加菜单
 </h3>
-
+<button class="dialog-close-btn" @click="showAddMenuDialog = false">✕</button>
     <div class="glass-form-group">
       <label>菜单名称</label>
       <input
@@ -396,6 +448,7 @@
     </div>
   </div>
 </div>  
+
   </div> 
 </template>
 
@@ -654,7 +707,7 @@ const currentSiteData = ref(null);
 
 let loadCardsToken = 0;
 
-const loadCards = async () => {
+const loadCards = async (retryCount = 0) => {
   if (!activeMenu.value) {
     cards.value = [];
     return;
@@ -662,12 +715,17 @@ const loadCards = async () => {
   const myToken = ++loadCardsToken;
   try {
     const res = await getCards(activeMenu.value.id, activeSubMenu.value?.id);
-    if (myToken !== loadCardsToken) return; // 已经有更新的请求发出了，这个结果作废
+    if (myToken !== loadCardsToken) return;
     cards.value = (res.data || []).sort((a, b) => (a.order || 0) - (b.order || 0));
   } catch (e) {
     if (myToken !== loadCardsToken) return;
     console.error('加载卡片失败:', e);
-    cards.value = [];
+    if (retryCount < 3) {
+      console.log(`🔄 第 ${retryCount + 1} 次重试...`);
+      setTimeout(() => loadCards(retryCount + 1), 1500);
+    } else {
+      cards.value = [];
+    }
   }
 };
 
@@ -1264,52 +1322,203 @@ const handleSwipe = (duration) => {
     }
   }
 };
+// ================================
+// 菜单切换：让顶部菜单跟随当前菜单滚动
+// ================================
+const scrollActiveMenuIntoView = async () => {
+  // 等待 Vue 完成 activeMenu 的 DOM 更新
+  await nextTick();
 
+  const activeMenuItem = document.querySelector('.menu-item.active');
+
+  if (activeMenuItem) {
+    activeMenuItem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
+};
+
+
+// ================================
+// 监听当前菜单变化
+// ================================
+// 无论是：
+// 1. 点击顶部菜单
+// 2. 左右滑动站点区域
+// 3. 初始化菜单
+// 4. 其他地方修改 activeMenu
+//
+// 只要 activeMenu 改变，顶部菜单都会自动滚动到当前菜单。
+watch(
+  () => activeMenu.value?.id,
+  async () => {
+    await scrollActiveMenuIntoView();
+  }
+);
+
+
+// ================================
+// 切换到下一个菜单
+// ================================
 const switchToNextMenu = () => {
   if (!menus.value.length) return;
-  const currentIndex = menus.value.findIndex(m => m.id === activeMenu.value?.id);
-  if (currentIndex === -1 || currentIndex === menus.value.length - 1) return;
+
+  const currentIndex = menus.value.findIndex(
+    m => m.id === activeMenu.value?.id
+  );
+
+  // 已经是最后一个菜单
+  if (
+    currentIndex === -1 ||
+    currentIndex === menus.value.length - 1
+  ) {
+    return;
+  }
+
   const nextMenu = menus.value[currentIndex + 1];
-  handleMenuSelect(nextMenu);
-  if (navigator.vibrate) navigator.vibrate(10);
+
+  // 切换主菜单
+  activeMenu.value = nextMenu;
+
+  // 清除当前子菜单
+  activeSubMenu.value = null;
+
+  // 手机震动反馈
+  if (navigator.vibrate) {
+    navigator.vibrate(10);
+  }
 };
 
+
+// ================================
+// 切换到上一个菜单
+// ================================
 const switchToPreviousMenu = () => {
   if (!menus.value.length) return;
-  const currentIndex = menus.value.findIndex(m => m.id === activeMenu.value?.id);
-  if (currentIndex <= 0) return;
+
+  const currentIndex = menus.value.findIndex(
+    m => m.id === activeMenu.value?.id
+  );
+
+  // 已经是第一个菜单
+  if (currentIndex <= 0) {
+    return;
+  }
+
   const prevMenu = menus.value[currentIndex - 1];
-  handleMenuSelect(prevMenu);
-  if (navigator.vibrate) navigator.vibrate(10);
+
+  // 切换主菜单
+  activeMenu.value = prevMenu;
+
+  // 清除当前子菜单
+  activeSubMenu.value = null;
+
+  // 手机震动反馈
+  if (navigator.vibrate) {
+    navigator.vibrate(10);
+  }
+
+  // 延迟加载站点卡片
+  // 保留你原来的逻辑
+  setTimeout(() => {
+    loadCards();
+  }, 100);
 };
+
+
+// ================================
+// 页面初始化
+// ================================
 onMounted(async () => {
-    // 预加载搜索引擎图标
+
+  // --------------------------------
+  // 预加载搜索引擎图标
+  // --------------------------------
   searchEngines.forEach(engine => {
     if (engine.icon !== 'site') {
       const img = new Image();
       img.src = engine.icon;
     }
   });
-  
-  // ... 原有的 onMounted 代码
-  await loadMenus();  
+
+
+  // --------------------------------
+  // 加载菜单
+  // --------------------------------
+  await loadMenus();
+
+
+  // --------------------------------
   // 加载系统配置
+  // --------------------------------
   try {
     const res = await getConfigs();
     const c = res.data;
-    if (c['site.copyright']) siteConfig.value.copyright = c['site.copyright'];
-    if (c['site.desktopColumns']) siteConfig.value.desktopColumns = parseInt(c['site.desktopColumns']);
-    if (c['site.mobileColumns']) siteConfig.value.mobileColumns = parseInt(c['site.mobileColumns']);
-    if (c['site.defaultEngine']) {
-      const engine = searchEngines.find(e => e.name === c['site.defaultEngine']);
-      if (engine) selectedEngine.value = engine;
+
+    // 版权信息
+    if (c['site.copyright']) {
+      siteConfig.value.copyright =
+        c['site.copyright'];
     }
-    if (c['site.backgroundImage']) siteConfig.value.backgroundImage = c['site.backgroundImage'];
-    if (c['site.backgroundOpacity']) siteConfig.value.backgroundOpacity = parseFloat(c['site.backgroundOpacity']);
+
+    // 桌面端列数
+    if (c['site.desktopColumns']) {
+      siteConfig.value.desktopColumns =
+        parseInt(c['site.desktopColumns']);
+    }
+
+    // 移动端列数
+    if (c['site.mobileColumns']) {
+      siteConfig.value.mobileColumns =
+        parseInt(c['site.mobileColumns']);
+    }
+
+    // 默认搜索引擎
+    if (c['site.defaultEngine']) {
+      const engine = searchEngines.find(
+        e => e.name === c['site.defaultEngine']
+      );
+
+      if (engine) {
+        selectedEngine.value = engine;
+      }
+    }
+
+    // 背景图片
+    if (c['site.backgroundImage']) {
+      siteConfig.value.backgroundImage =
+        c['site.backgroundImage'];
+    }
+
+    // 背景透明度
+    if (c['site.backgroundOpacity']) {
+      siteConfig.value.backgroundOpacity =
+        parseFloat(c['site.backgroundOpacity']);
+    }
+
   } catch (e) {
     console.error('加载配置失败:', e);
-  } 
- });
+  }
+
+
+  // --------------------------------
+  // 初始加载站点卡片
+  // --------------------------------
+  if (activeMenu.value) {
+    await loadCards();
+
+    await scrollActiveMenuIntoView();
+  }
+});
+  // 👇 加在这里，onMounted 最后面
+  setInterval(async () => {
+    try {
+      await fetch('/health');
+    } catch (e) {}
+  }, 4 * 60 * 1000);
+
 
 </script>
 
@@ -1476,6 +1685,9 @@ onMounted(async () => {
   overflow: visible; position: relative; z-index: 100;
 }
 .search-box-wrapper { width: 100%; max-width: 640px; }
+.content-area {
+  touch-action: pan-y;
+}
 .content-area { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 50px 60px; box-sizing: border-box; overflow-x: hidden; transition: opacity 0.3s ease; touch-action: pan-y; }
 @media (max-width: 768px) { .content-area { padding: 0 60px; } }
 @media (max-width: 768px) { .content-area:active { opacity: 0.95; } }
@@ -1498,25 +1710,310 @@ onMounted(async () => {
 .search-container:focus-within { transform: translateY(-6px) scale(1.02); border-color: var(--primary-color); box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 16px 48px rgba(0,0,0,0.2), 0 0 0 3px rgba(0,255,157,0.2), 0 0 50px rgba(0,255,157,0.4); }
 .dark-mode .search-container:focus-within { box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 20px 64px rgba(0,0,0,0.8), 0 0 0 3px rgba(0,255,157,0.25), 0 0 60px rgba(0,255,157,0.5); }
 
-.engine-selector { position: relative; display: flex; align-items: center; margin-right: 8px; border-right: 2px solid rgba(0,255,157,0.2); padding-right: 10px; flex-shrink: 0; }
-.engine-current { display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 2px 4px; border-radius: 8px; transition: all 0.2s; }
-.engine-current:hover { background: rgba(0,255,157,0.1); }
-.engine-icon { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
-.engine-emoji { font-size: 16px; font-weight: 700; line-height: 1; color: var(--text-color); }
-.engine-arrow { font-size: 10px; opacity: 0.5; color: var(--text-color); }
-.engine-dropdown {
-  position: absolute; top: calc(100% + 8px); left: 0;
-  background: var(--bg-color); border-radius: 12px; padding: 6px;
-  z-index: 9999; min-width: 120px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
-  display: flex; flex-direction: column; gap: 2px;
+/* =========================================================
+   搜索引擎选择器
+   ========================================================= */
+
+.engine-selector {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  margin-right: 8px;
+  padding-right: 10px;
+
+  flex-shrink: 0;
+
+  /* 搜索引擎与输入框之间的分隔线 */
+  border-right: 2px solid rgba(0, 255, 157, 0.2);
 }
-.dark-mode .engine-dropdown { background: #25262b; box-shadow: 0 8px 24px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); }
-.engine-option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-.engine-option:hover { background: rgba(0,255,157,0.1); }
-.engine-option.active { background: rgba(0,255,157,0.15); }
-.engine-label { font-size: 13px; font-weight: 600; color: var(--text-color); }
-.engine-option.active .engine-label { color: #00ff9d; }
+
+
+/* =========================================================
+   当前搜索引擎按钮
+   ========================================================= */
+
+.engine-current {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  width: auto;
+  min-width: 42px;
+  height: 32px;
+
+  margin: 0;
+  padding: 2px 5px;
+
+  border: none;
+  outline: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: var(--text-color);
+  font: inherit;
+  line-height: 1;
+
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+
+/* 当前搜索引擎 hover */
+.engine-current:hover {
+  background: rgba(0, 255, 157, 0.1);
+}
+
+
+/* 当前搜索引擎点击 */
+.engine-current:active {
+  transform: scale(0.96);
+}
+
+
+/* 键盘焦点 */
+.engine-current:focus-visible {
+  outline: 2px solid rgba(0, 255, 157, 0.45);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   搜索引擎图标
+   ========================================================= */
+
+.engine-icon {
+  width: 22px;
+  height: 22px;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 4px;
+
+  flex-shrink: 0;
+}
+
+
+/* 站内搜索使用的 🏠 */
+.engine-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+
+  color: var(--text-color);
+
+  flex-shrink: 0;
+}
+
+
+/* 下拉箭头 */
+.engine-arrow {
+  display: flex;
+  align-items: center;
+
+  margin-left: 1px;
+
+  font-size: 10px;
+  line-height: 1;
+
+  color: var(--text-color);
+
+  opacity: 0.55;
+
+  transition: transform 0.2s ease;
+}
+
+
+/* 打开菜单时箭头旋转 */
+.engine-current[aria-expanded="true"] .engine-arrow {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   搜索引擎下拉菜单
+   ========================================================= */
+
+.engine-dropdown {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 135px;
+
+  padding: 6px;
+
+  gap: 2px;
+
+  border-radius: 12px;
+
+  background: var(--bg-color);
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  box-sizing: border-box;
+
+  animation: engineDropdownIn 0.15s ease-out;
+}
+
+
+/* 下拉菜单出现动画 */
+@keyframes engineDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   深色模式
+   ========================================================= */
+
+.dark-mode .engine-dropdown {
+  background: #25262b;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* 深色模式下当前按钮 */
+.dark-mode .engine-current:hover {
+  background: rgba(0, 255, 157, 0.12);
+}
+
+
+/* =========================================================
+   下拉菜单选项
+   ========================================================= */
+
+.engine-option {
+  width: 100%;
+  min-height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 0;
+  padding: 7px 10px;
+
+  border: none;
+  outline: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: var(--text-color);
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+
+/* 选项 hover */
+.engine-option:hover {
+  background: rgba(0, 255, 157, 0.1);
+}
+
+
+/* 选项点击 */
+.engine-option:active {
+  transform: scale(0.98);
+}
+
+
+/* 键盘焦点 */
+.engine-option:focus-visible {
+  outline: 2px solid rgba(0, 255, 157, 0.35);
+  outline-offset: -2px;
+}
+
+
+/* 当前选中的搜索引擎 */
+.engine-option.active {
+  background: rgba(0, 255, 157, 0.15);
+}
+
+
+/* 当前选中的搜索引擎 hover */
+.engine-option.active:hover {
+  background: rgba(0, 255, 157, 0.2);
+}
+
+
+/* =========================================================
+   搜索引擎名称
+   ========================================================= */
+
+.engine-label {
+  flex: 1;
+
+  overflow: hidden;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  color: var(--text-color);
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* 当前选中项文字 */
+.engine-option.active .engine-label {
+  color: #00ff9d;
+}
 
 .search-input { flex: 1; border: none; background: transparent; padding: 10px 8px; color: var(--text-color); font-size: 15px; outline: none; font-weight: 500; }
 .search-input::placeholder { color: rgba(163,177,198,0.6); transition: color 0.2s; }
