@@ -1637,7 +1637,7 @@ onMounted(async () => {
     display:flex;
     justify-content:center;
     border-top:1px solid rgba(255,255,255,.06);
-    padding:15px 0 0 0;
+    padding:15px 0 12px;
 }
 .header-menu :deep(.menu-wrapper){
     width:100%;
@@ -1681,7 +1681,7 @@ onMounted(async () => {
 /* ===== Sections ===== */
 .menu-wrapper { margin:0 0 20px; }
 .search-section {
- padding: 16px 20px 30px; display: flex; justify-content: center;
+ padding: 32px 20px 30px; display: flex; justify-content: center;
   overflow: visible; position: relative; z-index: 100;
 }
 .search-box-wrapper { width: 100%; max-width: 640px; }
