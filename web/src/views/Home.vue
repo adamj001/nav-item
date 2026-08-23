@@ -59,7 +59,6 @@
     <div class="menu-item" :class="{ 'is-disabled': !isAdmin }" @click="handleAdminAction(openSystemSettings)">
       <span class="menu-icon">⚙️</span> 系统设置
     </div>
- 
     
 
     <div class="header-menu-item" :class="{ 'is-disabled': !isAdmin }" 
@@ -235,7 +234,10 @@
       :current-menu-id="activeMenu?.id"
       @import="handleBatchImport"
     />
-    <div v-if="showUserManageModal" class="glass-overlay" @click.self="showUserManageModal = false">
+    <Teleport to="body">
+    <div v-if="showUserManageModal" class="glass-overlay" 
+    :class="{ 'dark-mode': isDarkMode }"
+    @click.self="showUserManageModal = false">
   <div class="glass-dialog large-glass-dialog">
       <div class="dialog-header">
       <h3>👥 用户管理</h3>
@@ -244,6 +246,7 @@
     <UserManage />
   </div>
 </div>
+</Teleport>
      <Teleport to="body">
   <div v-if="showLoginModal" 
        class="glass-overlay" 
@@ -419,8 +422,10 @@
   </div>
 </div>
 </Teleport>
-
-  <div v-if="showAddMenuDialog" class="glass-overlay" @click.self="showAddMenuDialog = false">
+<Teleport to="body">
+  <div v-if="showAddMenuDialog" class="glass-overlay" 
+  :class="{ 'dark-mode': isDarkMode }"
+  @click.self="showAddMenuDialog = false">
   <div class="glass-dialog glass-dialog-sm" @click.stop>
     <h3>
   <span 
@@ -446,9 +451,9 @@
       <button class="glass-btn-cancel" @click="showAddMenuDialog = false">取消</button>
       <button class="glass-btn-primary" @click="confirmAddMenu">添加</button>
     </div>
-  </div>
+  </div>  
 </div>  
-
+</Teleport>
   </div> 
 </template>
 

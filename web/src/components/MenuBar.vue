@@ -110,7 +110,9 @@
 
     <!-- ===== 编辑菜单弹窗 ===== -->
 <Teleport to="body">
-  <div v-if="showEditDialog" class="glass-overlay" :class="{ 'dark-mode': isDarkMode }" @click.self="closeEditDialog">
+  <div v-if="showEditDialog" class="glass-overlay" 
+  :class="{ 'dark-mode': isDarkMode }" 
+  @click.self="closeEditDialog">
     <div class="glass-dialog" @click.stop>
       <h3>
         <span 
