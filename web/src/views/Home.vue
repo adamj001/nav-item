@@ -110,9 +110,9 @@
         @delete="confirmDeleteMenu"
         @refresh="reloadMenus"
       />
-    
+     </div>
     <div class="menu-divider"></div>
-   </div>
+  
  </header>
 
     <div class="search-section">
@@ -1637,7 +1637,7 @@ onMounted(async () => {
     display:flex;
     justify-content:center;
     border-top:1px solid rgba(255,255,255,.06);
-    padding:20px 0 0;
+     padding:15px 0 0 0;
 }
 .header-menu :deep(.menu-wrapper){
     width:100%;
@@ -1681,7 +1681,7 @@ onMounted(async () => {
 /* ===== Sections ===== */
 .menu-wrapper { margin:0 0 20px; }
 .search-section {
- padding: 32px 20px 30px; display: flex; justify-content: center;
+ padding: 16px 20px 30px; display: flex; justify-content: center;
   overflow: visible; position: relative; z-index: 100;
 }
 .search-box-wrapper { width: 100%; max-width: 640px; }
@@ -2033,7 +2033,7 @@ onMounted(async () => {
   .header-fixed { padding: 0 16px; }  
   .home-container { padding-top: 70px; }
   .header-inner, .content-area { padding-left: 12px !important; padding-right: 12px !important; }
-  .search-section { margin:0px 0 0; padding: 0 16px 24px; }
+  .search-section { margin:0px 0 0; padding: 0 16px 24px;}
   .search-container { padding: 6px 10px; }
   .search-input { padding: 12px 8px; font-size: 15px; }
   .search-btn { width: 40px; height: 40px; }
