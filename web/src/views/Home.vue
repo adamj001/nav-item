@@ -1637,7 +1637,7 @@ onMounted(async () => {
     display:flex;
     justify-content:center;
     border-top:1px solid rgba(255,255,255,.06);
-    padding:15px 0 12px;
+    padding:20px 0 0;
 }
 .header-menu :deep(.menu-wrapper){
     width:100%;
