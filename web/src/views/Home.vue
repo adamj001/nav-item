@@ -5,7 +5,7 @@
 <div 
   v-if="siteConfig.backgroundImage" 
   class="bg-wallpaper"
-  :style="{ 
+  :style="{
     backgroundImage: `url(${siteConfig.backgroundImage})`,
     opacity: siteConfig.backgroundOpacity 
   }"
@@ -58,12 +58,10 @@
     </div>
     <div class="menu-item" :class="{ 'is-disabled': !isAdmin }" @click="handleAdminAction(openSystemSettings)">
       <span class="menu-icon">⚙️</span> 系统设置
-    </div>
-    
-
-    <div class="header-menu-item" :class="{ 'is-disabled': !isAdmin }" 
+    </div>    
+    <div class="menu-item" :class="{ 'is-disabled': !isAdmin }" 
      @click="handleAdminAction(confirmexportData)">
-  <span class="menu-icon">📤</span> 备份数据
+ <span class="menu-icon">📤</span> 备份数据
 </div>
     
     <div class="menu-item" :class="{ 'is-disabled': !isAdmin }">
@@ -272,11 +270,7 @@
                  class="glass-input" @keyup.enter="doLogin" />
         </div>
         <button class="glass-btn-primary login-btn" :class="{ 'btn-empty': !canLogin }" @click="doLogin">登录</button>
-
-       
-
       </template>
-
     </div>
   </div>
 </Teleport>
@@ -299,6 +293,9 @@
   </div>
 </div>
 </Teleport>
+
+ <Teleport to="body">
+
 <ConfirmDialog
   v-model:visible="showDeleteMenuConfirm"
   :is-dark-mode="isDarkMode"
@@ -310,6 +307,8 @@
   confirm-type="danger"
   @confirm="deleteMenu"
 />
+</Teleport>
+ <Teleport to="body">
 <ConfirmDialog
   v-model:visible="showdeleteCardConfirm"
   :is-dark-mode="isDarkMode"
@@ -321,6 +320,9 @@
   confirm-type="danger"
   @confirm="deleteCard"
 />
+</Teleport>
+
+ <Teleport to="body">
 <ConfirmDialog
   v-model:visible="showexportDataConfirm"
   :is-dark-mode="isDarkMode"
@@ -331,7 +333,7 @@
   confirm-text="开始备份"
   @confirm="exportData"
 />
-
+</Teleport>
 <footer class="footer">
   <div class="footer-content">
     <p class="copyright">{{ siteConfig.copyright }}</p>
@@ -496,7 +498,13 @@ const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value;
   localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light');
 };
-
+watch(isDarkMode, (val) => {
+  if (val) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+}, { immediate: true });
 const showEngineMenu = ref(false);
 
 // ==================== 认证管理 ====================

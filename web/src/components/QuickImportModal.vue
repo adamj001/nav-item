@@ -1,4 +1,5 @@
 <template>
+  <Teleport to="body">
     <div v-if="visible" class="glass-overlay" @click="close"> 
     <div class="glass-dialog" @click.stop>      
       <h3>⚡ 快速批量导入</h3>
@@ -38,6 +39,7 @@
       </div>
     </div>
   </div> 
+   </Teleport>
 </template>
 
 <script setup>

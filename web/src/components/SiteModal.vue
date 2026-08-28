@@ -1,5 +1,5 @@
 <template>
-  
+  <Teleport to="body">
   <div v-if="visible" class="glass-overlay" @click="close">
     <div class="glass-dialog" @click.stop>
       <h3>
@@ -83,6 +83,7 @@
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <script setup>
