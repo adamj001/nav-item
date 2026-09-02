@@ -1535,14 +1535,19 @@ onMounted(async () => {
 
 </script>
 
- <style scoped>
+<style scoped>
+/* =========================================================
+   1. 全局配置 & 主题变量 (Global & Theme)
+   ========================================================= */
 .bg-wallpaper {
-  position: fixed; inset: 0; z-index: 0;
-  background-size: cover; background-position: center;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
   pointer-events: none;
 }
 
-/* ===== 全局变量 ===== */
 .home-container {
   --primary-color: #00ff9d;
   --bg-color: #e0e5ec;
@@ -1550,10 +1555,16 @@ onMounted(async () => {
   --card-bg: #e0e5ec;
   --header-bg: rgba(224, 229, 236, 0.85);
 
-  min-height: 100vh; background-color: var(--bg-color); color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease; padding-top: 70px;
-  overflow-x: hidden; width: 100%;
+  min-height: 100vh;
+  width: 100%;
+  padding-top: 70px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* 深色模式全局变量 */
 .home-container.dark-mode {
   --bg-color: #1a1b1e;
   --text-color: #e0e0e0;
@@ -1561,73 +1572,94 @@ onMounted(async () => {
   --header-bg: rgba(26, 27, 30, 0.8);
 }
 
-/* Header */
+
+/* =========================================================
+   2. 顶栏区域 (Header)
+   ========================================================= */
 .header-fixed {
- position: fixed; top: 0; left: 0; right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;   
-  background: var(--header-bg); backdrop-filter: blur(20px);
-  padding: 0 32px;        /* 改成上下留白，别再用 justify-content: center 撑 64px 高度了 */
-  z-index: 1000;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  padding: 0 32px;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .header-inner {
-  box-sizing: border-box;   /* 加这一行 */
+  box-sizing: border-box;
   width: 100%;
   max-width: 1400px;
-  margin:0 auto;
+  margin: 0 auto;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
- 
 }
-.header-left { display: flex; align-items: center; gap: 12px; }
-.site-logo { height: 40px; width: auto; }
-.site-title { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px; color: var(--text-color); }
-.header-right { display: flex; gap: 16px; align-items: center; }
 
-/* Icon Button */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-logo {
+  height: 40px;
+  width: auto;
+}
+
+.site-title {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  color: var(--text-color);
+}
+
+.header-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* 基础图标按钮 */
 .icon-btn {
-  background: transparent; border: none; cursor: pointer; color: var(--text-color); padding: 6px;
-  border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.icon-btn:hover { background: var(--bg-color); box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.4), inset -2px -2px 5px rgba(255,255,255,0.5); color: var(--primary-color); }
-.dark-mode .icon-btn:hover { box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3); }
 
-/* =========================================
-   管理员头像按钮专属样式 (新增部分)
-   ========================================= */
+.icon-btn:hover {
+  background: var(--bg-color);
+  box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+  color: var(--primary-color);
+}
+
+.dark-mode .icon-btn:hover {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* 管理员头像/状态按钮 */
 .header-right .admin-btn {
   width: 38px;
   height: 38px;
+  padding: 0;
   border-radius: 50% !important;
-   padding: 0;
   background-color: #00bcd4;
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
- transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
-/* 1. 未登录状态：保持原来的蓝色 */
-.admin-btn.is-logged-out {
-  background-color: #00bcd4 !important; 
-  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4) !important;
-}
-
-/* 2. 普通用户登录：显示为灰色 */
-.admin-btn.is-user {
-  background-color: #6b7280 !important; /* 经典深灰色 */
-  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4) !important;
-}
-
-/* 3. 管理员登录：显示为红色 */
-.admin-btn.is-admin {
-  background-color: #ff4d4f !important;
-  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4) !important;
-}
-
 
 .header-right .admin-btn:hover {
   background-color: #00acc1;
@@ -1636,522 +1668,532 @@ onMounted(async () => {
   box-shadow: 0 6px 16px rgba(0, 188, 212, 0.5);
 }
 
+/* admin-btn 状态切分 */
+.admin-btn.is-logged-out {
+  background-color: #00bcd4 !important; 
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4) !important;
+}
+
+.admin-btn.is-user {
+  background-color: #6b7280 !important;
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4) !important;
+}
+
+.admin-btn.is-admin,
 .header-right .admin-btn.is-logged-in {
-  background-color: #ff4d4f;
-  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4);
+  background-color: #ff4d4f !important;
+  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4) !important;
 }
 
 .header-right .admin-btn.is-logged-in:hover {
-  background-color: #ff7875;
-  box-shadow: 0 6px 16px rgba(255, 77, 79, 0.5);
+  background-color: #ff7875 !important;
+  box-shadow: 0 6px 16px rgba(255, 77, 79, 0.5) !important;
 }
-.header-menu{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    border-top:1px solid rgba(255,255,255,.06);
-     padding:15px 0 0 0;
+
+
+/* =========================================================
+   3. 菜单与下拉列表 (Menu & Dropdown)
+   ========================================================= */
+.menu-wrapper {
+  margin: 0 0 20px;
 }
-.header-menu :deep(.menu-wrapper){
-    width:100%;
-    max-width:1400px;
+
+.header-menu {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+  padding: 15px 0 0 0;
+}
+
+.header-menu :deep(.menu-wrapper) {
+  width: 100%;
+  max-width: 1400px;
   margin: 0 0 12px;
 }
 
+.user-menu-container {
+  position: relative;
+}
 
-/* ===== Dropdown ===== */
-.user-menu-container { position: relative; }
 .dropdown-menu {
-  position: absolute; top: 120%; right: 0; background: var(--bg-color); border-radius: 16px;
-  padding: 10px 0; min-width: 180px; z-index: 1001; border: none;
-  box-shadow: 6px 6px 12px rgba(163, 177, 198, 0.5), -6px -6px 12px rgba(255,255,255,0.5);
+  position: absolute;
+  top: 120%;
+  right: 0;
+  z-index: 1001;
+  min-width: 180px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 16px;
+  background: var(--bg-color);
+  box-shadow: 6px 6px 12px rgba(163, 177, 198, 0.5), -6px -6px 12px rgba(255, 255, 255, 0.5);
 }
-.dark-mode .dropdown-menu { background: #25262b; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
-.menu-header-label { padding: 8px 20px; font-size: 14px; color: var(--primary-color); opacity: 1; font-weight: bold; }
-.menu-item { padding: 12px 20px; color: var(--text-color); cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 10px; font-weight: 500; transition: all 0.2s; }
-.menu-icon { font-size: 16px; min-width: 20px; text-align: center; }
-.menu-item:hover { color: var(--primary-color); background: rgba(0,0,0,0.02); }
-.dark-mode .menu-item:hover { background: rgba(255,255,255,0.05); }
-.menu-divider { height: 1px; background: rgba(163, 177, 198, 0.3); margin: 6px 0; }
-.logout { color: #ff4d4f; }
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0 !important; }
-.is-disabled { opacity: 0.4; cursor: not-allowed !important; pointer-events: none; }
-.logout-btn {
-  background: #ff4d4f !important;
-  box-shadow: 0 4px 20px rgba(255, 77, 79, 0.3) !important;
+
+.dark-mode .dropdown-menu {
+  background: #25262b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
-.logout-btn:hover {
-  background: #ff7875 !important;
-  box-shadow: 0 6px 24px rgba(255, 77, 79, 0.45) !important;
+
+.menu-header-label {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary-color);
+  opacity: 1;
 }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-item:hover {
+  color: var(--primary-color);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dark-mode .menu-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-icon {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.menu-divider {
+  height: 1px;
+  margin: 6px 0;
+  background: rgba(163, 177, 198, 0.3);
+}
+
 .import-menu-label {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
 }
-/* ===== Sections ===== */
-.menu-wrapper { margin:0 0 20px; }
-.search-section {
- padding: 16px 20px 30px; display: flex; justify-content: center;
-  overflow: visible; position: relative; z-index: 100;
-}
-.search-box-wrapper { width: 100%; max-width: 640px; }
-.content-area {
-  touch-action: pan-y;
-}
-.content-area { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 50px 60px; box-sizing: border-box; overflow-x: hidden; transition: opacity 0.3s ease; touch-action: pan-y; }
-@media (max-width: 768px) { .content-area { padding: 0 60px; } }
-@media (max-width: 768px) { .content-area:active { opacity: 0.95; } }
 
-/* ===== Search ===== */
-.search-container {
-  display: flex; align-items: center; background: var(--card-bg);
-  border-radius: 16px; padding: 6px 12px; width: 100%; margin: 8px 0 0;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
-  backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;
-}
-.dark-mode .search-container {
-  background: var(--card-bg); border: 1px solid var(--card-border);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.4), 0 8px 16px rgba(0,0,0,0.5), 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
-}
-.search-container:hover { transform: translateY(-4px) scale(1.01); border-color: rgba(0,255,157,0.4); box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 12px 32px rgba(0,0,0,0.15), 0 0 30px rgba(0,255,157,0.25), inset 0 1px 0 rgba(255,255,255,0.2); }
-.dark-mode .search-container:hover { border-color: rgba(255,255,255,0.4); box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 16px 48px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,157,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
-.search-container:focus-within { transform: translateY(-6px) scale(1.02); border-color: var(--primary-color); box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 16px 48px rgba(0,0,0,0.2), 0 0 0 3px rgba(0,255,157,0.2), 0 0 50px rgba(0,255,157,0.4); }
-.dark-mode .search-container:focus-within { box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 20px 64px rgba(0,0,0,0.8), 0 0 0 3px rgba(0,255,157,0.25), 0 0 60px rgba(0,255,157,0.5); }
 
 /* =========================================================
-   搜索引擎选择器
+   4. 搜索框模块 (Search Section & Engines)
    ========================================================= */
-
-.engine-selector {
+.search-section {
   position: relative;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  padding: 16px 20px 30px;
+  overflow: visible;
+}
 
+.search-box-wrapper {
+  width: 100%;
+  max-width: 640px;
+}
+
+.search-container {
+  position: relative;
   display: flex;
   align-items: center;
-
-  margin-right: 8px;
-  padding-right: 10px;
-
-  flex-shrink: 0;
-
-  /* 搜索引擎与输入框之间的分隔线 */
-  border-right: 2px solid rgba(0, 255, 157, 0.2);
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.dark-mode .search-container {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4), 0 8px 16px rgba(0,0,0,0.5), 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+}
 
-/* =========================================================
-   当前搜索引擎按钮
-   ========================================================= */
+.search-container:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(0, 255, 157, 0.4);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 12px 32px rgba(0,0,0,0.15), 0 0 30px rgba(0,255,157,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.dark-mode .search-container:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 16px 48px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,157,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.search-container:focus-within {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--primary-color);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 16px 48px rgba(0,0,0,0.2), 0 0 0 3px rgba(0,255,157,0.2), 0 0 50px rgba(0,255,157,0.4);
+}
+
+.dark-mode .search-container:focus-within {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 20px 64px rgba(0,0,0,0.8), 0 0 0 3px rgba(0,255,157,0.25), 0 0 60px rgba(0,255,157,0.5);
+}
+
+/* 4.1 搜索引擎选择器结构 */
+.engine-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  padding-right: 10px;
+  flex-shrink: 0;
+  border-right: 2px solid rgba(0, 255, 157, 0.2);
+}
 
 .engine-current {
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 4px;
-
   width: auto;
   min-width: 42px;
   height: 32px;
-
   margin: 0;
   padding: 2px 5px;
-
   border: none;
   outline: none;
   border-radius: 8px;
-
   background: transparent;
-
   color: var(--text-color);
   font: inherit;
   line-height: 1;
-
   cursor: pointer;
-
   appearance: none;
   -webkit-appearance: none;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
-
-/* 当前搜索引擎 hover */
-.engine-current:hover {
-  background: rgba(0, 255, 157, 0.1);
-}
-
-
-/* 当前搜索引擎点击 */
-.engine-current:active {
-  transform: scale(0.96);
-}
-
-
-/* 键盘焦点 */
-.engine-current:focus-visible {
-  outline: 2px solid rgba(0, 255, 157, 0.45);
-  outline-offset: 2px;
-}
-
-
-/* =========================================================
-   搜索引擎图标
-   ========================================================= */
+.engine-current:hover { background: rgba(0, 255, 157, 0.1); }
+.dark-mode .engine-current:hover { background: rgba(0, 255, 157, 0.12); }
+.engine-current:active { transform: scale(0.96); }
+.engine-current:focus-visible { outline: 2px solid rgba(0, 255, 157, 0.45); outline-offset: 2px; }
 
 .engine-icon {
   width: 22px;
   height: 22px;
-
   display: block;
-
   object-fit: contain;
-
   border-radius: 4px;
-
   flex-shrink: 0;
 }
 
-
-/* 站内搜索使用的 🏠 */
 .engine-emoji {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 22px;
   height: 22px;
-
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
-
   color: var(--text-color);
-
   flex-shrink: 0;
 }
 
-
-/* 下拉箭头 */
 .engine-arrow {
   display: flex;
   align-items: center;
-
   margin-left: 1px;
-
   font-size: 10px;
   line-height: 1;
-
   color: var(--text-color);
-
   opacity: 0.55;
-
   transition: transform 0.2s ease;
 }
 
-
-/* 打开菜单时箭头旋转 */
 .engine-current[aria-expanded="true"] .engine-arrow {
   transform: rotate(180deg);
 }
 
-
-/* =========================================================
-   搜索引擎下拉菜单
-   ========================================================= */
-
+/* 4.2 搜索引擎下拉菜单 */
 .engine-dropdown {
   position: absolute;
-
   top: calc(100% + 8px);
   left: 0;
-
   z-index: 9999;
-
   display: flex;
   flex-direction: column;
-
   min-width: 135px;
-
   padding: 6px;
-
   gap: 2px;
-
   border-radius: 12px;
-
   background: var(--bg-color);
-
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.06);
-
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
-
   animation: engineDropdownIn 0.15s ease-out;
 }
 
-
-/* 下拉菜单出现动画 */
-@keyframes engineDropdownIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* =========================================================
-   深色模式
-   ========================================================= */
-
 .dark-mode .engine-dropdown {
   background: #25262b;
-
   border: 1px solid rgba(255, 255, 255, 0.1);
-
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.15);
 }
-
-
-/* 深色模式下当前按钮 */
-.dark-mode .engine-current:hover {
-  background: rgba(0, 255, 157, 0.12);
-}
-
-
-/* =========================================================
-   下拉菜单选项
-   ========================================================= */
 
 .engine-option {
   width: 100%;
   min-height: 36px;
-
   display: flex;
   align-items: center;
-
   gap: 10px;
-
   margin: 0;
   padding: 7px 10px;
-
   border: none;
   outline: none;
   border-radius: 8px;
-
   background: transparent;
-
   color: var(--text-color);
   font: inherit;
   text-align: left;
-
   cursor: pointer;
-
   box-sizing: border-box;
-
   appearance: none;
   -webkit-appearance: none;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
+.engine-option:hover { background: rgba(0, 255, 157, 0.1); }
+.engine-option:active { transform: scale(0.98); }
+.engine-option:focus-visible { outline: 2px solid rgba(0, 255, 157, 0.35); outline-offset: -2px; }
 
-/* 选项 hover */
-.engine-option:hover {
-  background: rgba(0, 255, 157, 0.1);
-}
-
-
-/* 选项点击 */
-.engine-option:active {
-  transform: scale(0.98);
-}
-
-
-/* 键盘焦点 */
-.engine-option:focus-visible {
-  outline: 2px solid rgba(0, 255, 157, 0.35);
-  outline-offset: -2px;
-}
-
-
-/* 当前选中的搜索引擎 */
-.engine-option.active {
-  background: rgba(0, 255, 157, 0.15);
-}
-
-
-/* 当前选中的搜索引擎 hover */
-.engine-option.active:hover {
-  background: rgba(0, 255, 157, 0.2);
-}
-
-
-/* =========================================================
-   搜索引擎名称
-   ========================================================= */
+.engine-option.active { background: rgba(0, 255, 157, 0.15); }
+.engine-option.active:hover { background: rgba(0, 255, 157, 0.2); }
 
 .engine-label {
   flex: 1;
-
   overflow: hidden;
-
   font-size: 13px;
   font-weight: 600;
-
   line-height: 1.2;
-
   color: var(--text-color);
-
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-
-/* 当前选中项文字 */
 .engine-option.active .engine-label {
   color: #00ff9d;
 }
 
-.search-input { flex: 1; border: none; background: transparent; padding: 10px 8px; color: var(--text-color); font-size: 15px; outline: none; font-weight: 500; }
-.search-input::placeholder { color: rgba(163,177,198,0.6); transition: color 0.2s; }
-.search-container:focus-within .search-input::placeholder { color: rgba(0,255,157,0.5); }
-.dark-mode .search-input::placeholder { color: rgba(255,255,255,0.4); }
-.clear-btn { background: transparent; border: none; color: #888; cursor: pointer; padding: 0 8px; font-size: 18px; transition: all 0.2s; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
-.clear-btn:hover { color: var(--primary-color); opacity: 1; transform: scale(1.2) rotate(90deg); }
-.search-btn { background: var(--icon-bg); color: var(--primary-color); width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(0,255,157,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
-.dark-mode .search-btn { background: var(--card-bg); box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(255,255,255,0.05); }
-.search-btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 12px rgba(163,177,198,0.5), -6px -6px 12px rgba(255,255,255,0.6); }
-.dark-mode .search-btn:hover { box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -6px -6px 12px rgba(255,255,255,0.08); }
-.search-btn:active { transform: translateY(0); box-shadow: inset 3px 3px 6px rgba(163,177,198,0.4), inset -3px -3px 6px rgba(255,255,255,0.5); }
-.dark-mode .search-btn:active { box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -3px -3px 6px rgba(255,255,255,0.05); }
-
-@media (max-width: 768px) {
-  .site-title { display: none; }
-  .header-fixed { padding: 0 16px; }  
-  .home-container { padding-top: 70px; }
-  .header-inner, .content-area { padding-left: 12px !important; padding-right: 12px !important; }
-  .search-section { margin:0px 0 0; padding: 0 16px 24px;}
-  .search-container { padding: 6px 10px; }
-  .search-input { padding: 12px 8px; font-size: 15px; }
-  .search-btn { width: 40px; height: 40px; }
-  .search-container:hover { transform: translateY(-2px) scale(1.005); }
-}
-
-/* ===== Footer ===== */
-.footer { text-align: center; opacity: 0.6; padding: 20px; font-size: 13px; font-weight: 500; }
-
-/* ================================================================
-   弹窗私有样式（glass-theme.css 提供主体样式）
-   ================================================================ */
-
-/* 登录弹窗 */
-.login-glass-dialog {
-  padding: 40px; 
-  border-radius: 24px; 
-  width: 90%;                 /* 手机端自适应宽度 */
-  max-width: 360px;           /* 电脑端最大限制宽度 */
-  
-  border: none; 
-  animation: slideUp 0.3s ease; /* 从下方滑入的动画 */
-  h3 { margin: 0 0 30px; text-align: center; font-size: 1.5rem;
-  }
-
- }
- .login-glass-dialog .glass-form-group {
- margin-bottom: 28px;  
-}
-.login-glass-dialog .glass-input { 
-  width: 100%;
-  padding: 14px; 
-  background: var(--bg-color); 
-  border-radius: 12px; 
-  color: var(--text-color); 
-  border: none; 
-  box-sizing: border-box; 
-  outline: none;
-  
+/* 4.3 输入框与按钮 */
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 8px;
+  color: var(--text-color);
   font-size: 15px;
- }
+  outline: none;
+  font-weight: 500;
+}
 
-.login-glass-dialog .glass-actions {
-  margin-top: 38px;  /* 输入框和按钮条之间的距离 */
+.search-input::placeholder {
+  color: rgba(163, 177, 198, 0.6);
+  transition: color 0.2s;
 }
-.login-glass-dialog h3 {
-  margin: 0 0 30px;  text-align: center;
-  font-size: 1.4rem; font-weight: 700;
-  color: var(--glass-text-color);
-}
-.login-btn { 
-  width: 100%; 
-  padding: 14px; 
-  background: var(--primary-color);
-  border: none; 
-  border-radius: 12px; 
-  color: #fff; 
-  font-weight: bold; 
-  cursor: pointer; 
-  margin-top: 10px; 
-  font-size: 16px;
-  box-shadow: 4px 4px 10px rgba(0, 255, 157, 0.3); 
-  transition: all 0.2s; }
-.login-glass-dialog .admin-login-icon {
-  margin: 0 auto 28px auto;  /* 头像下方间距也加大一点 */
-}
-.login-btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 15px rgba(0, 255, 157, 0.4); }
-.modal-btn:active { transform: translateY(0); }
 
-/* admin 图标 */
-.admin-login-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background-color: #00bcd4;                           /* 登录前：青色 */
-  color: #ffffff;
+.search-container:focus-within .search-input::placeholder {
+  color: rgba(0, 255, 157, 0.5);
+}
+
+.dark-mode .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.clear-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  margin: 0 auto 20px auto;
-  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* 具有弹性的过渡 */
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
 
+.clear-btn:hover {
+  color: var(--primary-color);
+  opacity: 1;
+  transform: scale(1.2) rotate(90deg);
 }
-/* 管理员：红色旋转 */
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 157, 0.2);
+  background: var(--icon-bg);
+  color: var(--primary-color);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dark-mode .search-btn {
+  background: var(--card-bg);
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(255,255,255,0.05);
+}
+
+.search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 12px rgba(163,177,198,0.5), -6px -6px 12px rgba(255,255,255,0.6);
+}
+
+.dark-mode .search-btn:hover {
+  box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -6px -6px 12px rgba(255,255,255,0.08);
+}
+
+.search-btn:active {
+  transform: translateY(0);
+  box-shadow: inset 3px 3px 6px rgba(163,177,198,0.4), inset -3px -3px 6px rgba(255,255,255,0.5);
+}
+
+.dark-mode .search-btn:active {
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -3px -3px 6px rgba(255,255,255,0.05);
+}
+
+
+/* =========================================================
+   5. 内容区域与页脚 (Content Area & Footer)
+   ========================================================= */
+.content-area {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 50px 60px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  transition: opacity 0.3s ease;
+  touch-action: pan-y;
+}
+
+.footer {
+  text-align: center;
+  opacity: 0.6;
+  padding: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   6. 各种弹窗组件 (Dialogs & Modals)
+   ========================================================= */
+
+/* 6.1 通用登录/小弹窗 */
+.login-glass-dialog {
+  width: 90%;
+  max-width: 360px;
+  padding: 40px; 
+  border: none;
+  border-radius: 24px; 
+  animation: slideUp 0.3s ease;
+}
+
+.login-glass-dialog h3 {
+  margin: 0 0 30px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--glass-text-color);
+}
+
+.login-glass-dialog .glass-form-group {
+  margin-bottom: 28px;  
+}
+
+.login-glass-dialog .glass-input { 
+  box-sizing: border-box; 
+  width: 100%;
+  padding: 14px; 
+  border: none;
+  border-radius: 12px; 
+  background: var(--bg-color); 
+  color: var(--text-color); 
+  outline: none;
+  font-size: 15px;
+}
+
+.login-glass-dialog .glass-actions {
+  margin-top: 38px;
+}
+
+.login-glass-dialog .admin-login-icon {
+  margin: 0 auto 28px auto;
+}
+
+.login-btn { 
+  width: 100%; 
+  margin-top: 10px; 
+  padding: 14px; 
+  border: none; 
+  border-radius: 12px; 
+  background: var(--primary-color);
+  color: #fff; 
+  font-size: 16px;
+  font-weight: bold; 
+  cursor: pointer; 
+  box-shadow: 4px 4px 10px rgba(0, 255, 157, 0.3); 
+  transition: all 0.2s; 
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 15px rgba(0, 255, 157, 0.4);
+}
+
+.modal-btn:active {
+  transform: translateY(0);
+}
+
+.admin-login-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  background-color: #00bcd4;
+  color: #ffffff;
+  font-size: 32px;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .admin-login-icon.logged-in-admin {
-  background-color: #ff4d4f;                          /* 登录后：红色 */
+  background-color: #ff4d4f;
   box-shadow: 0 4px 20px rgba(255, 77, 79, 0.6);
-  transform: rotate(360deg) scale(1.1);               /* 旋转360°并轻微放大 */
+  transform: rotate(360deg) scale(1.1);
 }
-/* 普通用户：灰色旋转 */
+
 .admin-login-icon.logged-in-user {
   background-color: #6b7280;
   box-shadow: 0 4px 20px rgba(107, 114, 128, 0.5);
   transform: rotate(360deg) scale(1.1);
 }
-/* 9. 遮罩层及弹窗出现的逐帧渐变动画 */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 10. 手机端对弹窗尺寸的收缩适配 */
-@media (max-width: 768px) {
-  .modal-content { padding: 30px 20px; }
-}
+/* 6.2 登出确认弹窗 */
 .logout-dialog {
   max-width: 300px;
   text-align: center;
@@ -2169,6 +2211,11 @@ onMounted(async () => {
   color: var(--glass-text-color);
 }
 
+.logout-btn,
+.logout {
+  color: #ff4d4f;
+}
+
 .logout-btn {
   background: #ff4d4f !important;
   box-shadow: 0 4px 20px rgba(255, 77, 79, 0.3) !important;
@@ -2179,21 +2226,21 @@ onMounted(async () => {
   box-shadow: 0 6px 24px rgba(255, 77, 79, 0.45) !important;
 }
 
-/* 用户管理弹窗 */
+/* 6.3 用户管理/大型弹窗 */
 .large-glass-dialog { 
-  max-width: 900px; 
+  position: relative;
   width: 95%; 
+  max-width: 900px; 
   max-height: 85vh; 
-  position: relative; /* 关键：让关闭按钮相对于整个弹窗定位，而不是 header */
-  padding-top: 24px;  /* 顶部分开一些距离，给右上角的按钮和标题留出呼吸空间 */
+  padding-top: 24px;
 }
+
 .dialog-header { 
   display: flex; 
-  justify-content: center; /* 完美的水平居中 */
+  justify-content: center;
   align-items: center; 
   margin-bottom: 20px; 
 }
-
 
 .dialog-header h3 { 
   margin: 0; 
@@ -2203,49 +2250,40 @@ onMounted(async () => {
 }
 
 .dialog-close-btn {
-  background: transparent; 
-  border: none; 
-  font-size: 18px; 
-  cursor: pointer;
-  color: var(--glass-label-color); 
-  
-  /* 稍微加大一点宽高，更符合 Windows 现代关闭按钮的比例 */
-  width: 46px; 
-  height: 32px; 
-  
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  
-  /* 完美的右上角绝对定位 */
   position: absolute; 
   top: 0; 
   right: 0; 
-  
-  /* 如果你的弹窗有圆角，按钮右上角也需要圆角，否则悬浮变红时会超出边界 */
-  border-top-right-radius: 12px; /* 这里的数值建议跟 .large-glass-dialog 的圆角大小保持一致 */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  width: 46px; 
+  height: 32px; 
+  border: none; 
+  background: transparent; 
+  color: var(--glass-label-color); 
+  font-size: 18px; 
+  cursor: pointer;
+  border-top-right-radius: 12px;
   border-bottom-left-radius: 4px;
-  
   transition: background-color 0.15s, color 0.15s;
 }
-/* 悬浮状态：Windows 经典的红底白字 */
+
 .dialog-close-btn:hover { 
-  background-color: #e81123; /* Windows 官方标准的关闭红 */
-  color: #ffffff;            /* 文字或图标变纯白 */
+  background-color: #e81123;
+  color: #ffffff;
 }
 
-/* 按下状态（可选）：Windows 点击时变深红 */
 .dialog-close-btn:active {
   background-color: #f1707a;
   color: #ffffff;
 }
 
-/* ===== 导入确认/结果弹窗 ===== */
+/* 6.4 导入预览与结果弹窗 */
 .import-preview-dialog {
   max-width: 340px;
+  padding: 32px 28px 28px;
   text-align: center;
   background: rgba(255, 255, 255, 0.30) !important;
-  padding: 32px 28px 28px;
 }
 
 .dark-mode .import-preview-dialog {
@@ -2265,16 +2303,15 @@ onMounted(async () => {
   color: var(--glass-label-color);
 }
 
-/* 统计数字展示 */
 .result-stats {
   display: flex;
   justify-content: center;
   gap: 24px;
   margin-bottom: 24px;
   padding: 16px;
-  background: var(--glass-icon-bar-bg);
   border: 1px solid var(--glass-icon-bar-border);
   border-radius: 14px;
+  background: var(--glass-icon-bar-bg);
 }
 
 .stat-item {
@@ -2287,64 +2324,81 @@ onMounted(async () => {
 .stat-num {
   font-size: 1.6rem;
   font-weight: 800;
-  color: var(--glass-primary);
   line-height: 1.1;
+  color: var(--glass-primary);
 }
 
 .stat-label {
   font-size: 12px;
-  color: var(--glass-label-color);
   font-weight: 500;
+  color: var(--glass-label-color);
 }
+
 .progress-track {
-  width: 100%; height: 10px;
-  background: var(--glass-input-bg);
-  border: 1px solid var(--glass-input-border);
-  border-radius: 10px; overflow: hidden;
+  width: 100%;
+  height: 10px;
   margin-bottom: 15px;
+  border: 1px solid var(--glass-input-border);
+  border-radius: 10px;
+  background: var(--glass-input-bg);
+  overflow: hidden;
 }
 
 .progress-fill {
-  height: 100%;
-  background: var(--glass-primary);
   width: 0%;
+  height: 100%;
   border-radius: 10px;
-  transition: width 0.3s ease-out;
+  background: var(--glass-primary);
   box-shadow: 0 0 10px var(--glass-primary);
+  transition: width 0.3s ease-out;
 }
 
 .result-confirm-btn {
   width: 100%;
 }
 
-/* 复用之前 ConfirmDialog 里的图标样式 */
 .confirm-icon {
-  width: 60px; height: 60px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px auto;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 28px;
 }
+
 .confirm-icon.icon-warning {
   background: rgba(255, 165, 0, 0.15);
   border-color: rgba(255, 165, 0, 0.3);
 }
+
 .confirm-icon.icon-success {
   background: rgba(0, 200, 122, 0.15);
   border-color: rgba(0, 200, 122, 0.3);
 }
 
-/* 添加菜单弹窗标题居中 */
+/* 6.5 菜单相关小弹窗辅助类 */
 .glass-dialog-sm h3 {
-   margin: 0 0 24px 0;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  margin: 0 0 24px 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.glass-dialog-sm label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--glass-label-color);
 }
 
 .title-icon {
@@ -2354,20 +2408,99 @@ onMounted(async () => {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  font-size: 1.1rem;
   background: rgba(var(--icon-color), 0.5);
   border: 1px solid rgba(var(--icon-color), 0.3);
+  font-size: 1.1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* 添加菜单弹窗 label */
-.glass-dialog-sm label {
-  display: block; margin-bottom: 8px;
-  font-size: 13px; font-weight: 600;
-  color: var(--glass-label-color);
+
+/* =========================================================
+   7. 动画与状态辅助类 (Animations & Helpers)
+   ========================================================= */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-/* 动画 */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0 !important;
+}
+
+.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes engineDropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =========================================================
+   8. 响应式布局 (Media Queries)
+   ========================================================= */
+@media (max-width: 768px) {
+  .site-title {
+    display: none;
+  }
+
+  .header-fixed {
+    padding: 0 16px;
+  }
+
+  .home-container {
+    padding-top: 70px;
+  }
+
+  .header-inner,
+  .content-area {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .content-area:active {
+    opacity: 0.95;
+  }
+
+  .search-section {
+    margin: 0;
+    padding: 0 16px 24px;
+  }
+
+  .search-container {
+    padding: 6px 10px;
+  }
+
+  .search-container:hover {
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  .search-input {
+    padding: 12px 8px;
+    font-size: 15px;
+  }
+
+  .search-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .modal-content {
+    padding: 30px 20px;
+  }
+}
 </style>

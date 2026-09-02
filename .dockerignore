@@ -5,3 +5,4 @@ dist
 web/node_modules
 server/node_modules
 README.md
+database/nav.db
