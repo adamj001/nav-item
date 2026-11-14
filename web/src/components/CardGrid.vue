@@ -242,12 +242,9 @@ function handleClick(e) { if (props.isEditMode) e.preventDefault(); }
   min-height: 100%; 
   overflow: visible; 
 }
-
+/* 桌面端 */
 @media (min-width: 1024px) {
-  .card-grid { 
-    grid-template-columns: repeat(var(--desktop-columns, 6), 1fr);
-    gap: 28px 20px; 
-  }
+  .card-grid { grid-template-columns: repeat(var(--desktop-columns, 6), minmax(0, 1fr)); }
 }
 
 .card-wrapper { 
@@ -575,15 +572,16 @@ function handleClick(e) { if (props.isEditMode) e.preventDefault(); }
    9. 移动端滑动优化
    ========================================= */
 @media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: repeat(var(--mobile-columns, 2), 1fr);
+  .card-grid { grid-template-columns: repeat(var(--mobile-columns, 2), minmax(0, 1fr));
     padding: 0 8px 60px;
     gap: var(--mobile-gap, 12px);  /* 👈 用变量控制间距 */
     width: 100%;
     box-sizing: border-box;
   }
 }
-
+/* 允许网格项和内部容器收缩 */
+.card-wrapper, .card-item, .card-info { min-width: 0; }
+ 
 /* 只在3列时缩小卡片 */
 @media (max-width: 768px) {
   .grid-container[style*="--mobile-columns: 3"] .card-wrapper,
