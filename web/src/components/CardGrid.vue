@@ -244,7 +244,10 @@ function handleClick(e) { if (props.isEditMode) e.preventDefault(); }
 }
 /* 桌面端 */
 @media (min-width: 1024px) {
-  .card-grid { grid-template-columns: repeat(var(--desktop-columns, 6), minmax(0, 1fr)); }
+  .card-grid {
+    grid-template-columns: repeat(var(--desktop-columns, 6), minmax(0, 1fr));
+    gap: 28px 20px;
+  }
 }
 
 .card-wrapper { 
